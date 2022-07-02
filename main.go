@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ArthurLins/octopus/core/logger"
-	"github.com/ArthurLins/octopus/core/security/rsa"
+	"github.com/ArthurLins/octopus/core/security/aes"
 )
 
 func main() {
@@ -17,10 +17,29 @@ func main() {
 	// 	return
 	// }
 
-	pub, priv, _ := rsa.GenerateKeyPair()
+	dt, err := aes.EncryptBase64([]byte("key"), []byte("Olá"))
 
-	logger.Info(string(rsa.EncodePublicKey(pub)))
-	logger.Info(string(rsa.EncodePrivateKey(priv)))
+	if err != nil {
+		logger.Error(err.Error())
+	}
+
+	logger.Error(dt)
+
+	dt2, err := aes.DecryptBase64([]byte("key"), dt)
+
+	if err != nil {
+		logger.Error("AA: " + err.Error())
+
+	}
+
+	logger.Info(string(dt))
+	logger.Info(string(dt2))
+	//aes.Encrypt([]byte("aaaa"), []byte("Olá"))
+
+	//pub, priv, _ := rsa.GenerateKeyPair()
+
+	//logger.Info(string(rsa.EncodePublicKey(pub)))
+	//logger.Info(string(rsa.EncodePrivateKey(priv)))
 }
 
 func getRoot(w http.ResponseWriter, r *http.Request) {
